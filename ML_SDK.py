@@ -8,13 +8,13 @@ logging.basicConfig(filename=LOGS, level=logging.ERROR, format="%(asctime)s FILE
 def count_gpt_tokens(messages):
     FOLDER_ID = get_folder_id()
     IAM_TOKEN = get_iam_token()
-    url = "https://llm.api.cloud.yandex.net/foundationModels/v1/tokenizeCompletion"
+    url = "https://llm.api.cloud.yandex.net/foundationModels/v1/tokenize"
     headers = {
         'Authorization': f'Bearer {IAM_TOKEN}',
         'Content-Type': 'application/json'
     }
     data = {
-        "modelUri": f"gpt://{FOLDER_ID}/yandexgpt-lite",
+        "modelUri": f"gpt://{FOLDER_ID}/yandexgpt-lite/latest",
         "text": messages
     }
     try:
@@ -26,29 +26,22 @@ def count_gpt_tokens(messages):
 def ask_gpt(messages):
     IAM_TOKEN = get_iam_token()
     FOLDER_ID = get_folder_id()
-    url = YaGPT_URL
-    headers = {
-        "Accept": "application/json",
-        'Authorization': f'Bearer {IAM_TOKEN}'
-    }
-    data = {
-        'modelUri': f"gpt://{FOLDER_ID}/yandexgpt-lite",
-        "completionOptions": {
-            "stream": False,
-            "temperature": 0.7,
-            "maxTokens": MAX_GPT_TOKENS,
-            "reasoningOptions": {
-                "mode": "DISABLED"
-            }
-        },
-        "messages": [
-            SYSTEM_PROMPT,
-            {"role": "user", "text": f"{messages}"}
-        ],
-        "jsonObject": True
-    }
+    data = {}
+    data["modelUri"] = f"gpt://{FOLDER_ID}/yandexgpt/latest"
+    data["completionOptions"] = {"temperature": 0.3, "maxTokens": MAX_GPT_TOKENS}
+    data["messages"] = [
+        {"role": "system", "text": f"{SYSTEM_PROMPT}"},
+        {"role": "user", "text": f"{messages}"},
+    ]
     try:
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            YaGPT_URL,
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {IAM_TOKEN}"
+            },
+            json=data,
+        ).json()
         if response.status_code != 200:
             return False, f"Ошибка GPT. Статус-код: {response.status_code}", None
         answer = response.json()['result']['alternatives'][0]['message']['text']
