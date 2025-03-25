@@ -38,7 +38,7 @@ def text_handler(message):
         if error_message:
             bot.send_message(user_id, error_message)
             return
-        status_gpt, answer_gpt, tokens_in_answer = ask_gpt()
+        status_gpt, answer_gpt, tokens_in_answer = ask_gpt(last_messages)
         if not status_gpt:
             bot.send_message(user_id, answer_gpt)
             return
