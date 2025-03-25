@@ -1,0 +1,13 @@
+HOME_DIR = '/home/yandex-gpt/AI-Assistant'
+YaGPT_URL = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
+SYSTEM_PROMPT = 'Ты - помощник. Отвечай кратко и понятно, старайся решить вопрос пользователя в пределах того, что он тебе предоставил'
+LOGS = f'{HOME_DIR}/logs.txt'
+DATABASE_FILE = f'{HOME_DIR}/messages.db'
+MAX_USERS = 10
+MAX_GPT_TOKENS = 200
+COUNT_LAST_MSG = 10
+MAX_USER_STT_BLOCKS = 10
+MAX_USER_TTS_SYMBOLS = 10000
+MAX_USER_GPT_TOKENS = 10000
+MAX_TTS_SYMBOLS = 1000
+MAX_STT_BLOCKS = 10
